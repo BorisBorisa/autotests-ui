@@ -1,3 +1,5 @@
+import pytest
+
 from playwright.sync_api import sync_playwright, expect
 
 EMAIL = "user.name@gmail.com"
@@ -8,6 +10,9 @@ COURSE_TITLE = "Courses"
 COURSE_LIST_TITLE = "There is no results"
 COURSE_LIST_DESCRIPTION_TEXT = "Results from the load test pipeline will be displayed here"
 
+
+@pytest.mark.courses
+@pytest.mark.regression
 def test_empty_courses_list():
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(headless=False)
