@@ -40,6 +40,9 @@ class CoursesListPage(BasePage):
         expect(self.empty_view_description_text).to_be_visible()
         expect(self.empty_view_description_text).to_have_text(self.EMPTY_VIEW_DESCRIPTION_TEXT)
 
+    def check_visible_create_course_button(self):
+        expect(self.create_course_btn).to_be_visible()
+
     def click_create_course_button(self) -> None:
         self.create_course_btn.click()
 
@@ -53,8 +56,8 @@ class CoursesListPage(BasePage):
     ) -> None:
         expect(self.course_image.nth(index)).to_be_visible()
 
-        expect(self.courses_title.nth(index)).to_be_visible()
-        expect(self.courses_title.nth(index)).to_have_text(title)
+        expect(self.course_title.nth(index)).to_be_visible()
+        expect(self.course_title.nth(index)).to_have_text(title)
 
         expect(self.course_max_score_text.nth(index)).to_be_visible()
         expect(self.course_max_score_text.nth(index)).to_have_text(f"Max score: {max_score}")
