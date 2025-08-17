@@ -40,23 +40,19 @@ def test_empty_courses_list(courses_list_page: CoursesListPage):
 def test_create_course(create_course_page: CreateCoursePage, courses_list_page: CoursesListPage):
     create_course_page.visit(CREATE_COURSE_URL)
 
-    create_course_page.check_visible_create_course_title()
-    create_course_page.check_disabled_create_course_button()
-
+    create_course_page.create_course_toolbar_view.check_visible(is_create_course_disabled=True)
     create_course_page.image_upload_widget.check_visible(is_image_uploaded=False)
 
-    create_course_page.check_visible_create_course_form(**CREATE_COURSE_DEFAULT_DATA)
+    create_course_page.create_course_from.check_visible(**CREATE_COURSE_DEFAULT_DATA)
 
-    create_course_page.check_visible_exercises_title()
-    create_course_page.check_visible_create_exercise_button()
+    create_course_page.exercises_toolbar_view.check_visible()
     create_course_page.check_visible_exercises_empty_view()
 
     create_course_page.image_upload_widget.upload_preview_image("./testdata/files/image.png")
     create_course_page.image_upload_widget.check_visible(is_image_uploaded=True)
 
-    create_course_page.fill_create_course_form(**CREATE_COURSE_TEST_DATA)
-
-    create_course_page.click_create_course_button()
+    create_course_page.create_course_from.fill(**CREATE_COURSE_TEST_DATA)
+    create_course_page.create_course_toolbar_view.click_create_course_button()
 
     courses_list_page.toolbar_view.check_visible()
     courses_list_page.course_view.check_visible(
