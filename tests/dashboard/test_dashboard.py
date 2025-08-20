@@ -15,6 +15,9 @@ from allure_commons.types import Severity
 @allure.epic(AllureEpic.LMS)
 @allure.feature(AllureFeature.DASHBOARD)
 @allure.story(AllureStory.DASHBOARD)
+@allure.parent_suite(AllureEpic.LMS)
+@allure.suite(AllureFeature.DASHBOARD)
+@allure.sub_suite(AllureStory.DASHBOARD)
 class TestDashboard:
     DASHBOARD_URL = "https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/dashboard"
 

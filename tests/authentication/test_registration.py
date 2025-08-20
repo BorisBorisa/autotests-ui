@@ -16,6 +16,9 @@ from allure_commons.types import Severity
 @allure.epic(AllureEpic.LMS)
 @allure.feature(AllureFeature.AUTHENTICATION)
 @allure.story(AllureStory.REGISTRATION)
+@allure.parent_suite(AllureEpic.LMS)
+@allure.suite(AllureFeature.AUTHENTICATION)
+@allure.sub_suite(AllureStory.REGISTRATION)
 class TestRegistration:
     REGISTRATION_URL = "https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/registration"
     EMAIL = "user.name@gmail.com"
