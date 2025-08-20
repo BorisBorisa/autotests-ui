@@ -7,7 +7,7 @@ from components.authentication.login_form_component import LoginFormComponent
 from playwright.sync_api import Page
 
 import re
-
+import allure
 
 class LoginPage(BasePage):
     WRONG_EMAIL_OR_PASS_ALERT_TEXT = "Wrong email or password"
@@ -30,6 +30,7 @@ class LoginPage(BasePage):
         self.registration_link.click()
         self.check_current_url(re.compile(".*/#/auth/registration"))
 
+    @allure.step("Check visible wrong email or password alert")
     def check_visible_wrong_email_or_password_alert(self) -> None:
         self.wrong_email_or_password_alert.check_visible()
         self.wrong_email_or_password_alert.check_have_text(self.WRONG_EMAIL_OR_PASS_ALERT_TEXT)
