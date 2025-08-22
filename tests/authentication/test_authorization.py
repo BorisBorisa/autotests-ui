@@ -8,6 +8,8 @@ from tools.allure.tags import AllureTag
 from tools.allure.epics import AllureEpic
 from tools.allure.features import AllureFeature
 from tools.allure.stories import AllureStory
+from tools.routes import AppRoute
+from config import settings
 from allure_commons.types import Severity
 
 
@@ -21,26 +23,18 @@ from allure_commons.types import Severity
 @allure.suite(AllureFeature.AUTHENTICATION)
 @allure.sub_suite(AllureStory.AUTHORIZATION)
 class TestAuthorization:
-    AUTH_URL = "https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/login"
-    REGISTRATION_URL = "https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/registration"
     TEST_DATA = (
         ("user.name@gmail.com", "password"),
         ("user.name@gmail.com", "  "),
         ("  ", "password")
     )
 
-    REGISTRATION_DATA = {
-        "email": "user.name@gmail.com",
-        "username": "username",
-        "password": "password"
-    }
-
     @pytest.mark.parametrize("email, password", TEST_DATA)
     @allure.title("User login with wrong email or password")
     @allure.tag(AllureTag.USER_LOGIN)
     @allure.severity(Severity.CRITICAL)
     def test_wrong_email_or_password_authorization(self, login_page: LoginPage, email: str, password: str):
-        login_page.visit(url=self.AUTH_URL)
+        login_page.visit(url=AppRoute.LOGIN)
         login_page.login_form.fill(email, password)
         login_page.click_login_button()
         login_page.check_visible_wrong_email_or_password_alert()
@@ -54,23 +48,27 @@ class TestAuthorization:
             dashboard_page: DashboardPage,
             login_page: LoginPage
     ):
-        registration_page.visit(self.REGISTRATION_URL)
-        registration_page.registration_form.fill(**self.REGISTRATION_DATA)
+        registration_page.visit(AppRoute.REGISTRATION)
+        registration_page.registration_form.fill(
+            email=settings.test_user.email,
+            username=settings.test_user.username,
+            password=settings.test_user.password
+        )
         registration_page.click_registration_button()
 
         dashboard_page.toolbar_view.check_visible()
-        dashboard_page.navbar.check_visible(username=self.REGISTRATION_DATA["username"])
+        dashboard_page.navbar.check_visible(username=settings.test_user.username)
         dashboard_page.sidebar.check_visible()
         dashboard_page.sidebar.click_logout()
 
         login_page.login_form.fill(
-            email=self.REGISTRATION_DATA["email"],
-            password=self.REGISTRATION_DATA["password"]
+            email=settings.test_user.email,
+            password=settings.test_user.password
         )
         login_page.click_login_button()
 
         dashboard_page.toolbar_view.check_visible()
-        dashboard_page.navbar.check_visible(username=self.REGISTRATION_DATA["username"])
+        dashboard_page.navbar.check_visible(username=settings.test_user.username)
         dashboard_page.sidebar.check_visible()
 
     @allure.title("Navigate from login page to registration page")
@@ -81,7 +79,7 @@ class TestAuthorization:
             login_page: LoginPage,
             registration_page: RegistrationPage
     ):
-        login_page.visit(self.AUTH_URL)
+        login_page.visit(AppRoute.LOGIN)
         login_page.registration_link.click()
 
         registration_page.registration_form.check_visible(email="", username="", password="")

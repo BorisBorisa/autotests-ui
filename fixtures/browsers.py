@@ -7,21 +7,17 @@ from typing import Generator
 from tools.playwright.pages import initialize_playwright_page
 from pages.authentication.registration_page import RegistrationPage
 from config import settings
-
-EMAIL = "user.name@gmail.com"
-USERNAME = "username"
-PASSWORD = "password"
-REGISTRATION_URL = "https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/registration"
+from tools.routes import AppRoute
 
 
 @pytest.fixture(scope="session")
 def initialize_browser_state(playwright: Playwright) -> None:
     browser = playwright.chromium.launch(headless=settings.headless)
-    context = browser.new_context()
+    context = browser.new_context(base_url=settings.get_base_url())
     page = context.new_page()
 
     registration_page = RegistrationPage(page=page)
-    registration_page.visit(REGISTRATION_URL)
+    registration_page.visit(AppRoute.REGISTRATION)
 
     registration_page.registration_form.fill(
         email=settings.test_user.email,
@@ -30,7 +26,7 @@ def initialize_browser_state(playwright: Playwright) -> None:
     )
     registration_page.click_registration_button()
 
-    context.storage_state(path="browser-state.json")
+    context.storage_state(path=settings.browser_state_file)
     browser.close()
 
 
