@@ -1,4 +1,3 @@
-import allure
 import pytest
 
 from _pytest.fixtures import SubRequest
@@ -7,6 +6,7 @@ from typing import Generator
 
 from tools.playwright.pages import initialize_playwright_page
 from pages.authentication.registration_page import RegistrationPage
+from config import settings
 
 EMAIL = "user.name@gmail.com"
 USERNAME = "username"
@@ -16,7 +16,7 @@ REGISTRATION_URL = "https://nikita-filonov.github.io/qa-automation-engineer-ui-c
 
 @pytest.fixture(scope="session")
 def initialize_browser_state(playwright: Playwright) -> None:
-    browser = playwright.chromium.launch(headless=False)
+    browser = playwright.chromium.launch(headless=settings.headless)
     context = browser.new_context()
     page = context.new_page()
 
@@ -24,9 +24,9 @@ def initialize_browser_state(playwright: Playwright) -> None:
     registration_page.visit(REGISTRATION_URL)
 
     registration_page.registration_form.fill(
-        email=EMAIL,
-        username=USERNAME,
-        password=PASSWORD
+        email=settings.test_user.email,
+        username=settings.test_user.username,
+        password=settings.test_user.password
     )
     registration_page.click_registration_button()
 
@@ -43,7 +43,7 @@ def chromium_page_with_state(
     yield from initialize_playwright_page(
         playwright,
         test_name=request.node.name,
-        storage_state="browser-state.json"
+        storage_state=settings.browser_state_file
     )
 
 
