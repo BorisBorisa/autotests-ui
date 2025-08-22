@@ -1,8 +1,11 @@
+import allure
 import pytest
 
+from _pytest.fixtures import SubRequest
 from playwright.sync_api import Playwright, Page
 from typing import Generator
 
+from tools.playwright.pages import initialize_playwright_page
 from pages.authentication.registration_page import RegistrationPage
 
 EMAIL = "user.name@gmail.com"
@@ -32,17 +35,24 @@ def initialize_browser_state(playwright: Playwright) -> None:
 
 
 @pytest.fixture
-def chromium_page_with_state(initialize_browser_state, playwright: Playwright) -> Generator[Page, None, None]:
-    browser = playwright.chromium.launch(headless=False)
-    context = browser.new_context(storage_state="browser-state.json")
-    page = context.new_page()
-    yield page
-    browser.close()
+def chromium_page_with_state(
+        initialize_browser_state,
+        request: SubRequest,
+        playwright: Playwright
+) -> Generator[Page, None, None]:
+    yield from initialize_playwright_page(
+        playwright,
+        test_name=request.node.name,
+        storage_state="browser-state.json"
+    )
 
 
 @pytest.fixture
-def chromium_page(playwright: Playwright) -> Generator[Page, None, None]:
-    browser = playwright.chromium.launch(headless=False)
-    page = browser.new_page()
-    yield page
-    browser.close()
+def chromium_page(
+        request: SubRequest,
+        playwright: Playwright
+) -> Generator[Page, None, None]:
+    yield from initialize_playwright_page(
+        playwright,
+        test_name=request.node.name
+    )
