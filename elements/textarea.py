@@ -3,6 +3,7 @@ from playwright.sync_api import Locator, expect
 
 from elements.base_element import BaseElement
 from tools.logger import get_logger
+from ui_coverage_tool import ActionType
 
 logger = get_logger("TEXTAREA")
 
@@ -23,6 +24,8 @@ class Textarea(BaseElement):
             logger.info(step)
             locator.fill(value)
 
+        self.track_coverage(ActionType.FILL, nth, **kwargs)
+
     def check_value(self, value: str, nth: int = 0, **kwargs):
         locator = self.get_locator(nth, **kwargs)
         step = f'Checking that {self.type_of} "{self.name}" has a value "{value}"'
@@ -30,3 +33,5 @@ class Textarea(BaseElement):
         with allure.step(step):
             logger.info(step)
             expect(locator).to_have_value(value)
+
+        self.track_coverage(ActionType.VALUE, nth, **kwargs)
