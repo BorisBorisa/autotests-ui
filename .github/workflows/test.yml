@@ -37,6 +37,7 @@ jobs:
           name: results
           path: allure-results
 
+
   publish-report:
     needs: run-tests
     runs-on: ubuntu-latest
