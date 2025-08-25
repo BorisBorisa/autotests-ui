@@ -35,3 +35,4 @@ class Textarea(BaseElement):
             expect(locator).to_have_value(value)
 
         self.track_coverage(ActionType.VALUE, nth, **kwargs)
+
